@@ -1,0 +1,46 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+./build/
+./__pycache__/
+.lock*
+.waf*
+./simulator/ns-3.39/examples/PowerTCP/results_fairness/*
+./simulator/ns-3.39/examples/PowerTCP/results_burst/*
+./simulator/ns-3.39/examples/PowerTCP/results_myfirst/*
+./simulator/ns-3.39/examples/PowerTCP/results_workload/*
+./simulator/ns-3.39/examples/PowerTCP/plot_burst/*
+./simulator/ns-3.39/examples/PowerTCP/plot_fairness/*
+./simulator/ns-3.39/examples/PowerTCP/plot_myfirst/*
+./simulator/ns-3.39/examples/PowerTCP/plot_workload/*
+./simulator/ns-3.39/examples/PowerTCP/dump_burst/*
