@@ -44,3 +44,6 @@
 ./simulator/ns-3.39/examples/PowerTCP/plot_myfirst/*
 ./simulator/ns-3.39/examples/PowerTCP/plot_workload/*
 ./simulator/ns-3.39/examples/PowerTCP/dump_burst/*
+./simulator/ns-3.39/examples/PowerTCP/myfirst_ss/*
+./simulator/ns-3.39/examples/PowerTCP/plot_myfirst_ss/*
+./simulator/ns-3.39/examples/PowerTCP/results_myfirst_ss/*
