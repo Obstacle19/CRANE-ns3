@@ -92,8 +92,8 @@ unordered_map<uint64_t, uint32_t> rate2kmax, rate2kmin;
 unordered_map<uint64_t, double> rate2pmax;
 
 uint64_t optical_reconfigure_delay; // OCS 的重配置延迟
-uint64_t optical_oswitch_rate; // OCS 的传输速率
-uint64_t optical_pswitch_rate;
+uint64_t optical_oswitch_rate; // 还是 OCS 的传输速率，只是复制了一遍，用于 Solstice 算法的输入
+uint64_t optical_pswitch_rate; // 还是 EPS 的传输速率，只是复制了一遍，用于 Solstice 算法的输入
 double optical_theta;
 
 #define MAN_OPTICAL 1
@@ -409,7 +409,7 @@ uint64_t get_nic_rate(NodeContainer &n) {
 //获取ToR交换机的吞吐率情况
 void PrintResults(std::map<uint32_t, NetDeviceContainer> ToR, uint32_t numToRs, double delay) {
 	//获取ToR交换机的带宽结果
-	for (uint32_t i = 6; i < numToRs + 6; i++) {
+	for (uint32_t i = 0; i < numToRs; i++) {
 		double throughputTotal = 0;
 		uint64_t torBuffer = 0;
 		double power;
@@ -840,7 +840,8 @@ int main(int argc, char* argv[])
     conf.close(); // 结束循环，关闭配置文件
 
 	// 将命令行参数或配置文件中的值赋给全局变量，覆盖默认值
-    cc_mode = algorithm; // overrides configuration file
+    // cc_mode = algorithm; // overrides configuration file
+	cc_mode = 0;
 	has_win = windowCheck; // overrides configuration file
 	var_win = windowCheck; // overrides configuration file
 
@@ -853,18 +854,21 @@ int main(int argc, char* argv[])
 
 	// 根据拥塞控制模式设置头部类型
 	if (cc_mode == 7) // timely, use ts
-		IntHeader::mode = IntHeader::TS;
+		// IntHeader::mode = IntHeader::TS;
+		IntHeader::mode = IntHeader::NONE;
 	else if (cc_mode == 3) // hpcc, powertcp, use int
-		IntHeader::mode = IntHeader::NORMAL;
+		// IntHeader::mode = IntHeader::NORMAL;
+		IntHeader::mode = IntHeader::NONE;
 	else if (cc_mode == 10) // hpcc-pint
-		IntHeader::mode = IntHeader::PINT;
+		// IntHeader::mode = IntHeader::PINT;
+		IntHeader::mode = IntHeader::NONE;
 	else // others, no extra header
 		IntHeader::mode = IntHeader::NONE;
 
 	// 如果使用 Pint，设置其日志基数和字节数
 	if (cc_mode == 10) {
-		Pint::set_log_base(pint_log_base);
-		IntHeader::pint_bytes = Pint::get_n_bytes();
+		// Pint::set_log_base(pint_log_base);
+		// IntHeader::pint_bytes = Pint::get_n_bytes();
 	}
 
     topof.open(topology_file.c_str()); // 打开拓扑文件
@@ -937,8 +941,8 @@ int main(int argc, char* argv[])
             torNodes.Add(tsw);
             tsw->SetNodeType(1);
 			tsw->SetOCS(OpticalSwitch);
-			tsw->Add_m_server_num();
-			tsw->Add_m_server_num();
+			// tsw->Add_m_server_num();
+			// tsw->Add_m_server_num();
 			//cout << "Created ToR switch, node id is: " << tsw->GetId() << '\n';
         }
 		else { // spine 和 core 交换机节点
@@ -1045,10 +1049,10 @@ int main(int argc, char* argv[])
 			switchDown[switchIdToNum[dst]].Add(DynamicCast<QbbNetDevice>(d.Get(1)));
 			Tor2Server[dnode].push_back(snode);
 
-			// if(dnode->GetNodeType() == 1){//更新ToR的server number
-			// 	Ptr<TORSwitchNode> tsw = DynamicCast<TORSwitchNode>(dnode);
-			// 	tsw->Add_m_server_num();
-			// }
+			if(dnode->GetNodeType() == 1){//更新ToR的server number
+				Ptr<TORSwitchNode> tsw = DynamicCast<TORSwitchNode>(dnode);
+				tsw->Add_m_server_num();
+			}
 		}
 
 

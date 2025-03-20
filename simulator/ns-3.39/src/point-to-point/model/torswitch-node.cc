@@ -143,7 +143,7 @@ void TORSwitchNode::SendToDev(Ptr<Packet>p, CustomHeader &ch) {
 		if (idx > m_server_num + 1){// 1 is ocs, and 1~servernum+1 is server. So this is for other switches.
 			//std::cout << "At Time:" << Simulator::Now().GetNanoSeconds() << " ToR switch is sending to a non-server node.\n";
 			if (m_ocs->CircuitConnected(p, ch)){
-				//std::cout << "Optical Switch is avaliable, use optical circuit.\n";
+				// std::cout << "Optical Switch is avaliable, use optical circuit.\n";
 				idx = 1;	//change to ocs.
 			}
 		}
@@ -411,15 +411,15 @@ int TORSwitchNode::log2apprx(int x, int b, int m, int l) {
 	return int(log2(x) * (1 << logres_shift(b, l)));
 }
 
-void TORSwitchNode::SetOpticalSwitch(OSwitchNode* optical) {
+void TORSwitchNode::SetOpticalSwitch(OSwitchNode* optical) { // 用于设置光交换机（但是这个函数没用到过，是个废了的函数）
 	this->m_ocs = optical;
 }
 
-void TORSwitchNode::Add_m_server_num(){
+void TORSwitchNode::Add_m_server_num(){ // 用于增加服务器数量
 	m_server_num = m_server_num + 1;
 }
 
-void TORSwitchNode::SetOCS(Ptr<OSwitchNode> ocs){
+void TORSwitchNode::SetOCS(Ptr<OSwitchNode> ocs){ // 设置光交换机的指针
 	m_ocs = ocs;
 }
 

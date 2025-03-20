@@ -24,6 +24,7 @@
 
 namespace ns3 {
 
+// 属性包括重配置延迟、 OCS 的速率、 EPS 的速率和持续时间扩展率
 TypeId OSwitchNode::GetTypeId (void)
 {
     static TypeId tid = TypeId ("ns3::OSwitchNode")
@@ -31,7 +32,7 @@ TypeId OSwitchNode::GetTypeId (void)
 	                    .AddConstructor<OSwitchNode> ()
 						.AddAttribute("ReconfigureDelay",
 									  "Reconfig delay time in ns.",
-									  UintegerValue(5000000),
+									  UintegerValue(5000000), // 光切换延迟
 									  MakeUintegerAccessor(&OSwitchNode::m_reconf_delay),
 									  MakeUintegerChecker<uint64_t>())
 						.AddAttribute("OswitchRate",
@@ -54,7 +55,7 @@ TypeId OSwitchNode::GetTypeId (void)
 }
 
 OSwitchNode::OSwitchNode() {
-    m_node_type = 3;
+    m_node_type = 3; // 表示该节点是 OCS
     for (uint32_t i = 0; i < pCnt; i++)
 		for (uint32_t j = 0; j < pCnt; j++)
 			m_bytes[i][j] = 0;
@@ -277,6 +278,7 @@ void OSwitchNode::DisplayDemandM(){
 	}
 }
 
+// 实现了匈牙利算法，用于解决最大匹配问题
 //-----------------------------------Hungary Algorithm---------------------------------------------------------
 bool bpm(int u, std::vector<std::vector<int>>& bpGraph, std::vector<bool>& seen, std::vector<int>& matchR) {
     for (int v = 0; v < bpGraph[0].size(); v++) {
@@ -653,7 +655,8 @@ bool OSwitchNode::CircuitConnected(Ptr<Packet>p, CustomHeader &ch) {
 	return result;
 }
 
-void OSwitchNode::man_init_configures(int tornum, int duration_nums){
+// 手动配置光路矩阵测试阶段
+void OSwitchNode::man_init_configures(int tornum, int duration_nums){ // 初始化手动配置
 	m_conf_and_times = new Solstice_output(tornum, tornum, duration_nums);
 	m_conf_and_times->circuit_configures = new bool** [m_conf_and_times->duration_nums];
 	for (int i = 0; i < m_conf_and_times->duration_nums; i++){
@@ -666,11 +669,11 @@ void OSwitchNode::man_init_configures(int tornum, int duration_nums){
 	}
 }
 
-void OSwitchNode::man_insert_duration_time(uint64_t dura_time) {
+void OSwitchNode::man_insert_duration_time(uint64_t dura_time) { // 插入持续时间
 	m_conf_and_times->duration_time.push_back(dura_time);
 }
 
-void OSwitchNode::man_set_configures( int curr_num, int row, int col, bool value){
+void OSwitchNode::man_set_configures( int curr_num, int row, int col, bool value){ // 设置电路配置
 	m_conf_and_times->circuit_configures[curr_num][row][col] = value;
 	m_conf_and_times->circuit_configures[curr_num][col][row] = value;
 }
